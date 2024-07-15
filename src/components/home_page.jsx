@@ -1,7 +1,9 @@
 import React, {useState} from "react";
 import "../index";
 import * as images from "../logo/airbnb-logo.png"
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Select} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, Input, Slider} from "@mui/material";
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
 
 export const HomePage = () => {
     const [proprty_open, setPropertyOpen] = useState(false);
@@ -9,9 +11,17 @@ export const HomePage = () => {
     const [rom_bed_open, setRomBedOpen] = useState(false);
     const [amenties_open, setAmentiesOpen] = useState(false);
     const [price_range_open, setPriceRangeOpen] = useState(false);
+    const [property_name, setpropertName] = useState(["Aparthotel", "Apartment", "Barn", "Bed and breakFast", "Boat", "Boutique hotel", "Bungalow",
+                                                      "Cabin", "Camper/RV", "Campsite", "Casa particular (Cuba)", "Castle", "Chalet", "Condominium",
+                                                      "Cattage", "Earth house", "Farm stay", "Guest suite", "Guesthouse", "Heritage hotel (India)", "Hostel",
+                                                      "Hotel", "House", "Houseboat", "Hut", "Loft", "Nature lodge", "Pension (South Korea)","Resort", 
+                                                      "Serviced apartment", "Tiny house", "Townhouse", "Train", "Treehouse", "Villa", "Other"
+    ]);
+    const [rooms_name, setRoomsName] = useState(["Entire home/apt", "Private room", "Shared room"]);
 
-    
-    
+    const [room_bed_num] = useState(["Any", "1", "2", "3", "4", "5", "6", "7", "8+"])
+
+    const [price_range, setPriceRange] = useState([1, 1000]);
     const handleClickPropertyOpen = () => {
         setPropertyOpen(true)
     }
@@ -47,7 +57,38 @@ export const HomePage = () => {
     const handleClicksetPriceRangeOpen = () => {
         setPriceRangeOpen(true);
     };
+    const PropertyItem = styled(Paper)(({ theme }) => ({
+        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+        ...theme.typography.body2,
+        padding: theme.spacing(1),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+        borderRadius: "10px",
+        // height: "100px",
+        // alignItems: "center"
+      }));
+    
+    const RoomItem = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    borderRadius: "10px",
+    height: "100px",
+    alignItems: "center"
+    }));
 
+    const RoomIBedtem = styled(Paper)(({ theme }) => ({
+        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+        ...theme.typography.body2,
+        padding: theme.spacing(1),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+        borderRadius: "10px",
+        }));
+
+      
     return (
         <>
             <div className="columns-2 mb-5 py-4">
@@ -66,10 +107,19 @@ export const HomePage = () => {
                         <DialogTitle>
                             PROPERTY TYPE
                         </DialogTitle>
-                        <DialogContent>
-                            <Select></Select>
+                        <DialogContent sx={{height: "450px", margin: "10px"}}>
+                           <Grid container gap={2} style={{cursor: "pointer"}}>
+                           {property_name.map((item)=>
+                                <>
+                                    <Grid>
+                                        <PropertyItem onClick={(e)=> console.log(e)} className="hover:outline-double font-serif bg-black">{item}</PropertyItem>
+                                    </Grid>
+                                </>
+                                )}
+                           </Grid>
                         </DialogContent>
-                        <DialogActions>
+                        <DialogActions sx={{display: "flex", justifyContent: "space-between"}}>
+                            <Button onClick={()=>handlePropertyClose()} variant="contained">Cancel</Button>
                             <Button variant="contained">Submit</Button>
                         </DialogActions>
                     </Dialog>
@@ -82,10 +132,19 @@ export const HomePage = () => {
                         <DialogTitle>
                         ROOM TYPE
                         </DialogTitle>
-                        <DialogContent>
-                            <Select></Select>
+                        <DialogContent sx={{height: "200px", marginX: "40px"}}>
+                        <Grid container gap={2} style={{cursor: "pointer"}}>
+                           {rooms_name.map((item)=>
+                                <>
+                                    <Grid>
+                                        <RoomItem onClick={(e)=> console.log(e)} className="hover:outline-double font-serif bg-black">{item}</RoomItem>
+                                    </Grid>
+                                </>
+                                )}
+                           </Grid>
                         </DialogContent>
-                        <DialogActions>
+                        <DialogActions sx={{display: "flex", justifyContent: "space-between"}}>
+                            <Button onClick={()=>handleRoomClose()} variant="contained">Cancel</Button>
                             <Button variant="contained">Submit</Button>
                         </DialogActions>
                     </Dialog>
@@ -99,9 +158,30 @@ export const HomePage = () => {
                         ROOMS & BEDS
                         </DialogTitle>
                         <DialogContent>
-                            <Select></Select>
+                            <Grid container gap={2} style={{cursor: "pointer",  marginBottom: "10px"}}>
+                                Rooms 
+                           {room_bed_num.map((item)=>
+                                <>
+                                    <Grid>
+                                        <RoomIBedtem onClick={(e)=> console.log(e)} className="hover:outline-double font-serif bg-black">{item}</RoomIBedtem>
+                                    </Grid>
+                                </>
+                                )}
+                            </Grid>
+                            <Divider></Divider>
+                            <Grid container gap={2} style={{cursor: "pointer", marginTop: "10px"}}>
+                                Beds
+                            {room_bed_num.map((item)=>
+                                <>
+                                    <Grid>
+                                        <RoomIBedtem onClick={(e)=> console.log(e)} className="hover:outline-double font-serif bg-black">{item}</RoomIBedtem>
+                                    </Grid>
+                                </>
+                                )}
+                            </Grid>
                         </DialogContent>
-                        <DialogActions>
+                        <DialogActions sx={{display: "flex", justifyContent: "space-between"}}>
+                            <Button onClick={()=>handleRoomBedClose()} variant="contained">Cancel</Button>
                             <Button variant="contained">Submit</Button>
                         </DialogActions>
                     </Dialog>
@@ -115,7 +195,7 @@ export const HomePage = () => {
                         AMENITIES
                         </DialogTitle>
                         <DialogContent>
-                            <Select></Select>
+                            
                         </DialogContent>
                         <DialogActions>
                             <Button variant="contained">Submit</Button>
@@ -130,10 +210,21 @@ export const HomePage = () => {
                         <DialogTitle>
                         PRICE RANGE
                         </DialogTitle>
-                        <DialogContent>
-                            <Select></Select>
+                        <DialogContent sx={{width: "600px", height: "300px", alignContent:"center", marginLeft: "5px"}}>
+                            <Slider sx={{width: "550px"}}
+                                getAriaLabel={() => 'Price range'}
+                                value={price_range}
+                                onChange={(e, newValue)=> setPriceRange(newValue)}
+                                valueLabelDisplay="auto"
+                                min={1}
+                                max={1000}
+                                // getAriaValueText={`$₹{price_range}`}
+                            />
+                            <Input  ></Input>
+                            <Input></Input>
                         </DialogContent>
-                        <DialogActions>
+                        <DialogActions sx={{display: "flex", justifyContent: "space-between"}}>
+                            <Button onClick={()=>handlesetPriceRangeOpenClose()} variant="contained">Cancel</Button>
                             <Button variant="contained">Submit</Button>
                         </DialogActions>
                     </Dialog>
