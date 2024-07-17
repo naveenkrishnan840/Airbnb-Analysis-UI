@@ -1,10 +1,12 @@
 import React, {act, useState} from "react";
 import "../index";
 import * as images from "../logo/airbnb-logo.png"
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, Input, Slider} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Input, Slider} from "@mui/material";
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
-import {FormGroup, FormControlLabel, Checkbox} from "@mui/material"
+import {FormGroup, FormControlLabel, Checkbox, Alert} from "@mui/material"
+
+import { get_filter_records } from "../components/API/request_index"
 
 export const HomePage = () => {
     const [proprty_open, setPropertyOpen] = useState(false);
@@ -131,39 +133,39 @@ export const HomePage = () => {
     const handleClicksetPriceRangeOpen = () => {
         setPriceRangeOpen(true);
     };
-    const PropertyItem = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-        ...theme.typography.body2,
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-        borderRadius: "10px",
-        // background: "black",
-        // color: "white"
-        // height: "100px",
-        // alignItems: "center"
-      }));
+    // const PropertyItem = styled(Paper)(({ theme }) => ({
+    //     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    //     ...theme.typography.body2,
+    //     padding: theme.spacing(1),
+    //     textAlign: 'center',
+    //     color: theme.palette.text.secondary,
+    //     borderRadius: "10px",
+    //     // background: "black",
+    //     // color: "white"
+    //     // height: "100px",
+    //     // alignItems: "center"
+    //   }));
     
-    const RoomItem = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-    borderRadius: "10px",
-    height: "100px",
-    alignItems: "center"
-    }));
+    // const RoomItem = styled(Paper)(({ theme }) => ({
+    // backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    // ...theme.typography.body2,
+    // padding: theme.spacing(1),
+    // textAlign: 'center',
+    // color: theme.palette.text.secondary,
+    // borderRadius: "10px",
+    // height: "100px",
+    // alignItems: "center"
+    // }));
 
-    const RoomIBedtem = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-        ...theme.typography.body2,
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-        borderRadius: "10px",
+    // const RoomIBedtem = styled(Paper)(({ theme }) => ({
+    //     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    //     ...theme.typography.body2,
+    //     padding: theme.spacing(1),
+    //     textAlign: 'center',
+    //     color: theme.palette.text.secondary,
+    //     borderRadius: "10px",
 
-        }));
+    //     }));
 
     const getType = (current_item, dialog) => {
         if (dialog === "property"){
@@ -237,6 +239,63 @@ export const HomePage = () => {
     const onChangePrice = (newValue) => {
         setPriceRange(newValue)
     }
+
+    const onsubmit = () => {
+        // var property = property_name.every(item=>item.checked == false) 
+        // var room = rooms_name.every(item=>item.checked == false) 
+        // if (property){
+        //         return <>
+        //             <Alert severity="error">Please select property type</Alert>
+        //             </>
+        // } else if (room){
+        //     <Alert severity="error">Please select room type</Alert>
+        // } else {
+            // var choosed_property = property_name.filter(item=>item.checked == true).map(item=>item.type);
+            // var choosed_rooms = rooms_name.filter(item=>item.checked == true).map(item=>item.type)
+            // var choosed_room_num = room_num.filter(item=>item.checked == true).map(item=>item.type) 
+            // var choosed_bed_num = bed_num.filter(item=>item.checked == true).map(item=>item.type) 
+            // var choosed_essentail_amenties = essentail_amenties.filter(item=>item.checked == true).map(item=>item.type) 
+            // var choosed_features_amenties = features_amenties.filter(item=>item.checked == true).map(item=>item.type) 
+            // var choosed_location_amenties = location_amenties.filter(item=>item.checked == true).map(item=>item.type) 
+            // var choosed_saftey_amenties = saftey_amenties.filter(item=>item.checked == true).map(item=>item.type) 
+            // var choosed_price_range = price_range.filter(item=>item.checked == true).map(item=>item.type) 
+            // var data = {
+            //     property: choosed_property, rooms: choosed_rooms, 
+            //     room_num: choosed_room_num, bed_num: choosed_bed_num, 
+            //     essentail_amenties: choosed_essentail_amenties,
+            //     features_amenties: choosed_features_amenties, location_amenties: choosed_location_amenties, 
+            //     saftey_amenties: choosed_saftey_amenties, price_range: choosed_price_range
+            // }
+            var data = {
+                "property": [
+                  "Aparthotel",
+                  "Apartment",
+                  "Barn"
+                ],
+                "rooms": [
+                  "Entire home/apt",
+                  "Private room"
+                ],
+                "room_num": [
+                  "1"
+                ],
+                "bed_num": [
+                  "2"
+                ],
+                "essentail_amenties": [
+                  "Heating",
+                  "Heating",
+                  "Hair dryer"
+                ],
+                "features_amenties": [],
+                "location_amenties": [],
+                "saftey_amenties": [],
+                "price_range": []
+              }
+              get_filter_records(data).then(response =>{
+                console.log(response)
+            })
+        }
     return (
         <>
             <div className="columns-2 mb-5 py-4">
@@ -268,8 +327,8 @@ export const HomePage = () => {
                            </Grid>
                         </DialogContent>
                         <DialogActions sx={{display: "flex", justifyContent: "space-between"}}>
-                            <Button onClick={()=>handlePropertyClose("cancel")} variant="contained">Cancel</Button>
-                            <Button onClick={()=>handlePropertyClose("submit")} variant="contained">Submit</Button>
+                            <Button color="inherit" onClick={()=>handlePropertyClose("cancel")} variant="contained">Cancel</Button>
+                            <Button style={{color: "black"}} onClick={()=>handlePropertyClose("submit")} variant="contained">Submit</Button>
                         </DialogActions>
                     </Dialog>
 
@@ -294,8 +353,8 @@ export const HomePage = () => {
                            </Grid>
                         </DialogContent>
                         <DialogActions sx={{display: "flex", justifyContent: "space-between"}}>
-                            <Button onClick={()=>handleRoomClose("cancel")} variant="contained">Cancel</Button>
-                            <Button onClick={()=>handleRoomClose("submit")} variant="contained">Submit</Button>
+                            <Button color="inherit" onClick={()=>handleRoomClose("cancel")} variant="contained">Cancel</Button>
+                            <Button style={{color: "black"}} onClick={()=>handleRoomClose("submit")} variant="contained">Submit</Button>
                         </DialogActions>
                     </Dialog>
 
@@ -333,8 +392,8 @@ export const HomePage = () => {
                             </Grid>
                         </DialogContent>
                         <DialogActions sx={{display: "flex", justifyContent: "space-between"}}>
-                            <Button onClick={()=>handleRoomBedClose("cancel")} variant="contained">Cancel</Button>
-                            <Button onClick={()=>handleRoomBedClose("submit")} variant="contained">Submit</Button>
+                            <Button color="inherit" onClick={()=>handleRoomBedClose("cancel")} variant="contained">Cancel</Button>
+                            <Button style={{color: "black"}} onClick={()=>handleRoomBedClose("submit")} variant="contained">Submit</Button>
                         </DialogActions>
                     </Dialog>
 
@@ -405,11 +464,10 @@ export const HomePage = () => {
 
                         </DialogContent>
                         <DialogActions sx={{display: "flex", justifyContent: "space-between"}}>
-                            <Button onClick={()=>handleAmentiesClose("cancel")} variant="contained">Cancel</Button>
-                            <Button onClick={()=>handleAmentiesClose("submit")} variant="contained">Submit</Button>
+                            <Button color="inherit" onClick={()=>handleAmentiesClose("cancel")} variant="contained">Cancel</Button>
+                            <Button style={{color: "black"}} color="error" onClick={()=>handleAmentiesClose("submit")} variant="contained">Submit</Button>
                         </DialogActions>
                     </Dialog>
-
                     <div className="hover:shadow-md hover:rounded-full hover:bg-gray-200 h-16 p-5 font-serif font-bold cursor-pointer"
                     onClick={handleClicksetPriceRangeOpen}>
                         PRICE RANGE
@@ -418,7 +476,10 @@ export const HomePage = () => {
                         <DialogTitle sx={{fontWeight: "bold"}}>
                             PRICE RANGE
                         </DialogTitle>
-                        <DialogContent sx={{display: "table-column", WebkitAlignContent:"center", width: "600px", height: "300px"}}>
+                        <DialogContent sx={{display: "table-column", WebkitAlignContent:"center", width: "600px"}}>
+                        <DialogContentText>
+                        Minimum & Maximum Nightly prices before fees and taxes
+                        </DialogContentText>
                             <Slider sx={{width: "550px"}}
                                 getAriaLabel={() => 'Price range'}
                                 value={price_range}
@@ -426,6 +487,7 @@ export const HomePage = () => {
                                 valueLabelDisplay="auto"
                                 min={100}
                                 max={10000}
+                                color="black"
                                 // getAriaValueText={`$₹{price_range}`}
                             />
                             <div className="flex justify-around mt-10">
@@ -444,12 +506,13 @@ export const HomePage = () => {
                             </div>
                         </DialogContent>
                         <DialogActions sx={{display: "flex", justifyContent: "space-between"}}>
-                            <Button onClick={()=>handlesetPriceRangeOpenClose("cancel")} variant="contained">Cancel</Button>
-                            <Button onClick={()=>handlesetPriceRangeOpenClose("submit")} variant="contained">Submit</Button>
+                            <Button color="inherit" onClick={()=>handlesetPriceRangeOpenClose("cancel")} variant="contained">Cancel</Button>
+                            <Button style={{color: "black"}} onClick={()=>handlesetPriceRangeOpenClose("submit")} variant="contained">Submit</Button>
                         </DialogActions>
                     </Dialog>
 
-                    <div className="hover:shadow-md hover:rounded-full hover:bg-red-400 h-16 p-5 font-serif font-bold cursor-pointer">
+                    <div className="hover:shadow-md hover:rounded-full hover:bg-red-400 h-16 p-5 font-serif font-bold cursor-pointer"
+                    onClick={()=> onsubmit()} >
                         SHOW RECORDS
                     </div>
                 </div>
