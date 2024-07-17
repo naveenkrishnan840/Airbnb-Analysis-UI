@@ -258,13 +258,12 @@ export const HomePage = () => {
             // var choosed_features_amenties = features_amenties.filter(item=>item.checked == true).map(item=>item.type) 
             // var choosed_location_amenties = location_amenties.filter(item=>item.checked == true).map(item=>item.type) 
             // var choosed_saftey_amenties = saftey_amenties.filter(item=>item.checked == true).map(item=>item.type) 
-            // var choosed_price_range = price_range.filter(item=>item.checked == true).map(item=>item.type) 
             // var data = {
             //     property: choosed_property, rooms: choosed_rooms, 
             //     room_num: choosed_room_num, bed_num: choosed_bed_num, 
             //     essentail_amenties: choosed_essentail_amenties,
             //     features_amenties: choosed_features_amenties, location_amenties: choosed_location_amenties, 
-            //     saftey_amenties: choosed_saftey_amenties, price_range: choosed_price_range
+            //     saftey_amenties: choosed_saftey_amenties, price_range: price_range
             // }
             var data = {
                 "property": [
