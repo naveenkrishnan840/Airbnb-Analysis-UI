@@ -34,17 +34,17 @@ export const HomePage = () => {
     const [bed_num, setBedNum] = useState([{type: "Any", checked: false},{type: "1", checked: false}, {type:"2", checked: false},{type: "3", checked: false},{type: "4", checked: false},
                                            {type:"5", checked: false},{type: "6", checked: false},{type:"7", checked: false},{type:"8+", checked: false}])
 
-    const [essentail_amenties, setEssentailAmenties] = useState([{type: "Wifi", checked: false}, {type: "Kitchen", checked: false}, {type: "Washing machine", checked: false}, {type: "Dryer", checked: false}, 
+    const [essential_amenities, setEssentailAmenties] = useState([{type: "Wifi", checked: false}, {type: "Kitchen", checked: false}, {type: "Washing machine", checked: false}, {type: "Dryer", checked: false}, 
                                                                  {type: "Air conditioning", checked: false}, {type: "Heating", checked: false}, {type: "Dedicated workspace", checked: false}, 
                                                                  {type: "TV", checked: false}, {type: "Heating", checked: false}, {type: "Hair dryer", checked: false}, {type: "Iron", checked: false}]);
 
-    const [features_amenties, setFeaturesAmenties] = useState([{type: "Pool", checked: false}, {type: "Hot tub", checked: false}, {type: "Free parking", checked: false}, {type: "EV charger", checked: false}, 
+    const [features_amenities, setFeaturesAmenties] = useState([{type: "Pool", checked: false}, {type: "Hot tub", checked: false}, {type: "Free parking", checked: false}, {type: "EV charger", checked: false}, 
                                                                     {type: "Cot", checked: false}, {type: "King bed", checked: false}, {type: "Gym", checked: false}, 
                                                                     {type: "BBQ grill", checked: false}, {type: "Breakfast", checked: false}, {type: "Indoor fireplace", checked: false}, {type: "Smoking allowed", checked: false}]);
 
-    const [location_amenties, setLocationAmenties] = useState([{type: "Beachfront", checked: false}, {type: "Waterfront", checked: false}]);
+    const [location_amenities, setLocationAmenties] = useState([{type: "Beachfront", checked: false}, {type: "Waterfront", checked: false}]);
 
-    const [saftey_amenties, setSafetyAmenties] = useState([{type: "Smoke alarm", checked: false}, {type: "Carbon monoxide alarm", checked: false}]);
+    const [safety_amenities, setSafetyAmenities] = useState([{type: "Smoke alarm", checked: false}, {type: "Carbon monoxide alarm", checked: false}]);
 
     const [price_range, setPriceRange] = useState([100, 10000]);
     const handleClickPropertyOpen = () => {
@@ -98,22 +98,22 @@ export const HomePage = () => {
     const handleAmentiesClose = (action) => {
         setAmentiesOpen(false);
         if (action === "cancel"){
-            setEssentailAmenties(essentail_amenties.map(item=>{
+            setEssentailAmenties(essential_amenities.map(item=>{
                 return {
                     ...item, checked: false
                 }
             }))
-            setFeaturesAmenties(features_amenties.map(item=>{
+            setFeaturesAmenties(features_amenities.map(item=>{
                 return {
                     ...item, checked: false
                 }
             }))
-            setLocationAmenties(location_amenties.map(item=>{
+            setLocationAmenties(location_amenities.map(item=>{
                 return {
                     ...item, checked: false
                 }
             }))
-            setSafetyAmenties(saftey_amenties.map(item=>{
+            setSafetyAmenities(safety_amenities.map(item=>{
                 return {
                     ...item, checked: false
                 }
@@ -209,13 +209,13 @@ export const HomePage = () => {
 
     const onChange = (current_item, action) => {
         if (action == "essentail") {
-            var name = essentail_amenties;
+            var name = essential_amenities;
         } else if (action == "features") {
-            var name = features_amenties;
+            var name = features_amenities;
         } else if (action == "location") {
-            var name = location_amenties;
+            var name = location_amenities;
         } else if (action == "saftey") {
-            var name = saftey_amenties;
+            var name = safety_amenities;
         }
         var new_name = name.map(item=>{
             if (item.type === current_item.type && current_item.checked == false){
@@ -232,7 +232,7 @@ export const HomePage = () => {
         } else if (action == "location") {
             setLocationAmenties(new_name);
         } else if (action == "saftey") {
-            setSafetyAmenties(new_name);
+            setSafetyAmenities(new_name);
         }
     }
 
@@ -254,16 +254,16 @@ export const HomePage = () => {
             // var choosed_rooms = rooms_name.filter(item=>item.checked == true).map(item=>item.type)
             // var choosed_room_num = room_num.filter(item=>item.checked == true).map(item=>item.type) 
             // var choosed_bed_num = bed_num.filter(item=>item.checked == true).map(item=>item.type) 
-            // var choosed_essentail_amenties = essentail_amenties.filter(item=>item.checked == true).map(item=>item.type) 
-            // var choosed_features_amenties = features_amenties.filter(item=>item.checked == true).map(item=>item.type) 
-            // var choosed_location_amenties = location_amenties.filter(item=>item.checked == true).map(item=>item.type) 
-            // var choosed_saftey_amenties = saftey_amenties.filter(item=>item.checked == true).map(item=>item.type) 
+            // var choosed_essentail_amenties = essential_amenities.filter(item=>item.checked == true).map(item=>item.type) 
+            // var choosed_features_amenties = features_amenities.filter(item=>item.checked == true).map(item=>item.type) 
+            // var choosed_location_amenties = location_amenities.filter(item=>item.checked == true).map(item=>item.type) 
+            // var choosed_saftey_amenties = safety_amenities.filter(item=>item.checked == true).map(item=>item.type) 
             // var data = {
             //     property: choosed_property, rooms: choosed_rooms, 
             //     room_num: choosed_room_num, bed_num: choosed_bed_num, 
-            //     essentail_amenties: choosed_essentail_amenties,
-            //     features_amenties: choosed_features_amenties, location_amenties: choosed_location_amenties, 
-            //     saftey_amenties: choosed_saftey_amenties, price_range: price_range
+            //     essential_amenities: choosed_essentail_amenties,
+            //     features_amenities: choosed_features_amenties, location_amenities: choosed_location_amenties, 
+            //     safety_amenities: choosed_saftey_amenties, price_range: price_range
             // }
             var data = {
                 "property": [
@@ -281,14 +281,14 @@ export const HomePage = () => {
                 "bed_num": [
                   "2"
                 ],
-                "essentail_amenties": [
+                "essential_amenities": [
                   "Heating",
                   "Heating",
                   "Hair dryer"
                 ],
-                "features_amenties": [],
-                "location_amenties": [],
-                "saftey_amenties": [],
+                "features_amenities": [],
+                "location_amenities": [],
+                "safety_amenities": [],
                 "price_range": []
               }
               get_filter_records(data).then(response =>{
@@ -407,7 +407,7 @@ export const HomePage = () => {
                         <DialogContent>
                             <div style={{fontWeight: "bold"}} >Essentails</div>
                             <Grid container columnGap={2}>
-                                {essentail_amenties.map(item=>
+                                {essential_amenities.map(item=>
                                     <>
                                         <FormGroup>
                                             <FormControlLabel
@@ -421,7 +421,7 @@ export const HomePage = () => {
 
                             <div style={{fontWeight: "bold"}}>Features</div>
                             <Grid container columnGap={2}>
-                                {features_amenties.map(item=>
+                                {features_amenities.map(item=>
                                     <>
                                         <FormGroup>
                                             <FormControlLabel
@@ -435,7 +435,7 @@ export const HomePage = () => {
                             
                             <div style={{fontWeight: "bold"}}>Location</div>
                             <Grid container columnGap={2}>
-                                {location_amenties.map(item=>
+                                {location_amenities.map(item=>
                                     <>
                                         <FormGroup>
                                             <FormControlLabel
@@ -449,7 +449,7 @@ export const HomePage = () => {
 
                             <div style={{fontWeight: "bold"}}>Safety</div>
                             <Grid container columnGap={2}>
-                                {saftey_amenties.map(item=>
+                                {safety_amenities.map(item=>
                                     <>
                                         <FormGroup>
                                             <FormControlLabel
