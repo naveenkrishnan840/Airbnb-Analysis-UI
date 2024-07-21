@@ -1,20 +1,37 @@
-import React, {act, useState} from "react";
+import React, {useState, useContext} from "react";
 import "../index";
-import * as images from "../logo/airbnb-logo.png"
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Input, Slider} from "@mui/material";
+import {Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Input, Slider} from "@mui/material";
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import {FormGroup, FormControlLabel, Checkbox, Alert} from "@mui/material"
-
+import {reactMainContext} from "../App"
 import { get_filter_records } from "../components/API/request_index"
+import {useNavigate} from "react-router-dom";
+import {Card, CardMedia, CardContent, Typography, CardActions, Tab, Tabs} from "@mui/material";
+import { TabContext, TabList, TabPanel} from '@mui/lab';
+
 
 export const HomePage = () => {
-    const [proprty_open, setPropertyOpen] = useState(false);
+
+    var response = {
+        "_id": "10133350",
+        "minimum_nights": "2",
+        "maximum_nights": "7",
+        "price": 275,
+        "minimum_night_price": 550,
+        "maximum_night_price": 1925,
+        "name_country": "2 bedroom Upper east side, United States",
+        "thumbnail_url": "https://a0.muscache.com/im/pictures/d9886a79-0633-4ab4-b03a-7686bab13d71.jpg?aki_policy=large"
+      }
+    const navigate = useNavigate();
+    const [tabValue, setTabValue] = useState("1");
+    const {setSelectedRecords, selectedRecords} = useContext(reactMainContext);
+    const [property_open, setPropertyOpen] = useState(false);
     const [room_open, setRoomOpen] = useState(false);
     const [rom_bed_open, setRomBedOpen] = useState(false);
-    const [amenties_open, setAmentiesOpen] = useState(false);
+    const [amenities_open, setAmenitiesOpen] = useState(false);
     const [price_range_open, setPriceRangeOpen] = useState(false);
-    const [property_name, setpropertyName] = useState([{type: "Aparthotel", checked: false}, {type: "Apartment", checked: false}, {type: "Barn", checked: false}, 
+    const [property_name, setPropertyName] = useState([{type: "Aparthotel", checked: false}, {type: "Apartment", checked: false}, {type: "Barn", checked: false},
                                                       {type: "Bed and breakFast", checked: false}, {type: "Boat", checked: false}, 
                                                       {type: "Boutique hotel", checked: false}, {type: "Bungalow", checked: false},
                                                       {type: "Cabin", checked: false}, {type: "Camper/RV", checked: false}, 
@@ -34,15 +51,18 @@ export const HomePage = () => {
     const [bed_num, setBedNum] = useState([{type: "Any", checked: false},{type: "1", checked: false}, {type:"2", checked: false},{type: "3", checked: false},{type: "4", checked: false},
                                            {type:"5", checked: false},{type: "6", checked: false},{type:"7", checked: false},{type:"8+", checked: false}])
 
-    const [essential_amenities, setEssentailAmenties] = useState([{type: "Wifi", checked: false}, {type: "Kitchen", checked: false}, {type: "Washing machine", checked: false}, {type: "Dryer", checked: false}, 
+    const [bath_room_num, setBathRoomNum] = useState([{type: "Any", checked: false},{type: "1", checked: false}, {type:"2", checked: false},{type: "3", checked: false},{type: "4", checked: false},
+                                           {type:"5", checked: false},{type: "6", checked: false},{type:"7", checked: false},{type:"8+", checked: false}])
+
+    const [essential_amenities, setEssentialAmenities] = useState([{type: "Wifi", checked: false}, {type: "Kitchen", checked: false}, {type: "Washing machine", checked: false}, {type: "Dryer", checked: false},
                                                                  {type: "Air conditioning", checked: false}, {type: "Heating", checked: false}, {type: "Dedicated workspace", checked: false}, 
                                                                  {type: "TV", checked: false}, {type: "Heating", checked: false}, {type: "Hair dryer", checked: false}, {type: "Iron", checked: false}]);
 
-    const [features_amenities, setFeaturesAmenties] = useState([{type: "Pool", checked: false}, {type: "Hot tub", checked: false}, {type: "Free parking", checked: false}, {type: "EV charger", checked: false}, 
+    const [features_amenities, setFeaturesAmenities] = useState([{type: "Pool", checked: false}, {type: "Hot tub", checked: false}, {type: "Free parking", checked: false}, {type: "EV charger", checked: false},
                                                                     {type: "Cot", checked: false}, {type: "King bed", checked: false}, {type: "Gym", checked: false}, 
                                                                     {type: "BBQ grill", checked: false}, {type: "Breakfast", checked: false}, {type: "Indoor fireplace", checked: false}, {type: "Smoking allowed", checked: false}]);
 
-    const [location_amenities, setLocationAmenties] = useState([{type: "Beachfront", checked: false}, {type: "Waterfront", checked: false}]);
+    const [location_amenities, setLocationAmenities] = useState([{type: "Beachfront", checked: false}, {type: "Waterfront", checked: false}]);
 
     const [safety_amenities, setSafetyAmenities] = useState([{type: "Smoke alarm", checked: false}, {type: "Carbon monoxide alarm", checked: false}]);
 
@@ -53,7 +73,7 @@ export const HomePage = () => {
     const handlePropertyClose = (action) => {
         setPropertyOpen(false);
         if (action === "cancel"){
-            setpropertyName(property_name.map(item=>{
+            setPropertyName(property_name.map(item=>{
                 return {
                     ...item, checked: false
                 }
@@ -88,6 +108,11 @@ export const HomePage = () => {
                     ...item, checked: false
                 }
             }))
+            setBathRoomNum(bath_room_num.map(item=>{
+                return {
+                    ...item, checked: false
+                }
+            }))
         }
     };
     const handleClickRoomBedOpen = () => {
@@ -95,20 +120,20 @@ export const HomePage = () => {
     };
 
 
-    const handleAmentiesClose = (action) => {
-        setAmentiesOpen(false);
+    const handleAmenitiesClose = (action) => {
+        setAmenitiesOpen(false);
         if (action === "cancel"){
-            setEssentailAmenties(essential_amenities.map(item=>{
+            setEssentialAmenities(essential_amenities.map(item=>{
                 return {
                     ...item, checked: false
                 }
             }))
-            setFeaturesAmenties(features_amenities.map(item=>{
+            setFeaturesAmenities(features_amenities.map(item=>{
                 return {
                     ...item, checked: false
                 }
             }))
-            setLocationAmenties(location_amenities.map(item=>{
+            setLocationAmenities(location_amenities.map(item=>{
                 return {
                     ...item, checked: false
                 }
@@ -120,8 +145,9 @@ export const HomePage = () => {
             }))
         }
     };
-    const handleClickAmentiesOpen = () => {
-        setAmentiesOpen(true);
+
+    const handleClickAmenitiesOpen = () => {
+        setAmenitiesOpen(true);
     };
     
     const handlesetPriceRangeOpenClose = (action) => {
@@ -177,8 +203,10 @@ export const HomePage = () => {
             var name = room_num;
         } else if (dialog === "bed_num") {
             var name = bed_num;
+        } else if (dialog == "bath_room_num"){
+            var name = bath_room_num;
         }
-        if (dialog === "room_num" || dialog === "bed_num") {
+        if (dialog === "room_num" || dialog === "bed_num" || dialog === "bath_room_num") {
             var new_name = name.map(item=>{
                 if (item.type === current_item.type){
                     item.checked = true
@@ -198,23 +226,25 @@ export const HomePage = () => {
             })
         }
         if (dialog == "property")
-            setpropertyName(new_name)
+            setPropertyName(new_name)
         else if (dialog === "rooms")
             setRoomsName(new_name)
         else if (dialog === "room_num")
             setRoomNum(new_name)
         else if (dialog === "bed_num")
             setBedNum(new_name)
+        else if (dialog == "bath_room_num")
+            setBathRoomNum(new_name)
     };
 
     const onChange = (current_item, action) => {
-        if (action == "essentail") {
+        if (action == "essential") {
             var name = essential_amenities;
         } else if (action == "features") {
             var name = features_amenities;
         } else if (action == "location") {
             var name = location_amenities;
-        } else if (action == "saftey") {
+        } else if (action == "safety") {
             var name = safety_amenities;
         }
         var new_name = name.map(item=>{
@@ -225,13 +255,13 @@ export const HomePage = () => {
             }
             return item
         })
-        if (action == "essentail") {
-            setEssentailAmenties(new_name)
+        if (action == "essential") {
+            setEssentialAmenities(new_name)
         } else if (action == "features") {
-            setFeaturesAmenties(new_name)
+            setFeaturesAmenities(new_name)
         } else if (action == "location") {
-            setLocationAmenties(new_name);
-        } else if (action == "saftey") {
+            setLocationAmenities(new_name);
+        } else if (action == "safety") {
             setSafetyAmenities(new_name);
         }
     }
@@ -240,76 +270,81 @@ export const HomePage = () => {
         setPriceRange(newValue)
     }
 
-    const onsubmit = () => {
-        // var property = property_name.every(item=>item.checked == false) 
-        // var room = rooms_name.every(item=>item.checked == false) 
-        // if (property){
-        //         return <>
-        //             <Alert severity="error">Please select property type</Alert>
-        //             </>
-        // } else if (room){
-        //     <Alert severity="error">Please select room type</Alert>
-        // } else {
-            // var choosed_property = property_name.filter(item=>item.checked == true).map(item=>item.type);
-            // var choosed_rooms = rooms_name.filter(item=>item.checked == true).map(item=>item.type)
-            // var choosed_room_num = room_num.filter(item=>item.checked == true).map(item=>item.type) 
-            // var choosed_bed_num = bed_num.filter(item=>item.checked == true).map(item=>item.type) 
-            // var choosed_essentail_amenties = essential_amenities.filter(item=>item.checked == true).map(item=>item.type) 
-            // var choosed_features_amenties = features_amenities.filter(item=>item.checked == true).map(item=>item.type) 
-            // var choosed_location_amenties = location_amenities.filter(item=>item.checked == true).map(item=>item.type) 
-            // var choosed_saftey_amenties = safety_amenities.filter(item=>item.checked == true).map(item=>item.type) 
-            // var data = {
-            //     property: choosed_property, rooms: choosed_rooms, 
-            //     room_num: choosed_room_num, bed_num: choosed_bed_num, 
-            //     essential_amenities: choosed_essentail_amenties,
-            //     features_amenities: choosed_features_amenties, location_amenities: choosed_location_amenties, 
-            //     safety_amenities: choosed_saftey_amenties, price_range: price_range
-            // }
+    const onSubmit = () => {
+        var property = property_name.every(item=>item.checked == false) 
+        var room = rooms_name.every(item=>item.checked == false) 
+        if (property){
+                return <>
+                    <Alert severity="error">Please select property type</Alert>
+                    </>
+        } else if (room){
+            <Alert severity="error">Please select room type</Alert>
+        } else {
+            var choosed_property = property_name.filter(item=>item.checked == true).map(item=>item.type);
+            var choosed_rooms = rooms_name.filter(item=>item.checked == true).map(item=>item.type)
+            var choosed_room_num = room_num.filter(item=>item.checked == true).map(item=>item.type) 
+            var choosed_bed_num = bed_num.filter(item=>item.checked == true).map(item=>item.type) 
+            var choosed_bath_room_num = bath_room_num.filter(item=>item.checked == true).map(item=>item.type) 
+            var choosed_essential_amenties = essential_amenities.filter(item=>item.checked == true).map(item=>item.type)
+            var choosed_features_amenties = features_amenities.filter(item=>item.checked == true).map(item=>item.type) 
+            var choosed_location_amenties = location_amenities.filter(item=>item.checked == true).map(item=>item.type) 
+            var choosed_safety_amenties = safety_amenities.filter(item=>item.checked == true).map(item=>item.type)
             var data = {
-                "property": [
-                  "Aparthotel",
-                  "Apartment",
-                  "Barn"
-                ],
-                "rooms": [
-                  "Entire home/apt",
-                  "Private room"
-                ],
-                "room_num": [
-                  "1"
-                ],
-                "bed_num": [
-                  "2"
-                ],
-                "essential_amenities": [
-                  "Heating",
-                  "Heating",
-                  "Hair dryer"
-                ],
-                "features_amenities": [],
-                "location_amenities": [],
-                "safety_amenities": [],
-                "price_range": []
-              }
+                property: choosed_property, rooms: choosed_rooms, 
+                room_num: choosed_room_num[0], bed_num: choosed_bed_num[0], bath_room_num: choosed_bath_room_num[0],
+                essential_amenities: choosed_essential_amenties,
+                features_amenities: choosed_features_amenties, location_amenities: choosed_location_amenties, 
+                safety_amenities: choosed_safety_amenties, price_range: price_range
+            }
+            // var data = {
+            //     "property": [
+            //       "Aparthotel",
+            //       "Apartment",
+            //       "Barn"
+            //     ],
+            //     "rooms": [
+            //       "Entire home/apt",
+            //       "Private room"
+            //     ],
+            //     "room_num": [
+            //       "1"
+            //     ],
+            //     "bed_num": [
+            //       "2"
+            //     ],
+            //     "bath_room_num": [
+            //       "2"
+            //     ],
+            //     "essential_amenities": [
+            //       "Heating",
+            //       "Heating",
+            //       "Hair dryer"
+            //     ],
+            //     "features_amenities": [],
+            //     "location_amenities": [],
+            //     "safety_amenities": [],
+            //     "price_range": []
+            //   }
               get_filter_records(data).then(response =>{
+                setSelectedRecords(response.detail);
+                // navigate("/show")
                 console.log(response)
             })
         }
+    }
+
+    const onChangeTab = (event, newValue) => {
+        setTabValue(newValue);
+    }
     return (
         <>
-            <div className="columns-2 mb-5 py-4">
-                <img alt="airbnb" className="py-2"/>
-                <div className="border-s-sky-50 shadow-md rounded-full inline-block p-3 w-20 h-10 blur-0">
-
-                </div>
-            </div>
-            <div className="border-teal-100 shadow-md h-16 rounded-full" style={{marginLeft: "150px", width: "1200px"}}>
+            <div className="border-teal-100 shadow-md h-16 rounded-full mx-48">
                 <div className="grid grid-cols-6 divide-x divide-gray-500 divide-solid">
                     <div className="hover:shadow-md hover:rounded-full hover:bg-gray-200 h-16 p-5 font-serif font-bold cursor-pointer"
                     onClick={()=>handleClickPropertyOpen()}>
                         PROPERTY TYPE
                     </div>
-                    <Dialog open={proprty_open}>
+                    <Dialog open={property_open}>
                         <DialogTitle sx={{fontWeight: "bold"}}>
                             PROPERTY TYPE
                         </DialogTitle>
@@ -366,9 +401,9 @@ export const HomePage = () => {
                             ROOMS & BEDS
                         </DialogTitle>
                         <DialogContent>
-                            <Grid container gap={2} style={{cursor: "pointer",  marginBottom: "10px"}}>
-                                Rooms 
-                           {room_num.map((item)=>
+                            <Grid container gap={2} style={{cursor: "pointer", marginTop: "10px"}}>
+                                Bedrooms
+                            {room_num.map((item)=>
                                 <>
                                     <Grid>
                                     <div onClick={(e)=> getType(item, "room_num")} className={`border border-gray-400 p-1.5 shadow-md rounded-md hover:bg-gray-400 font-serif ${item.checked == true ? "bg-black text-white": ""}`}>{item.type}</div>
@@ -378,12 +413,24 @@ export const HomePage = () => {
                                 )}
                             </Grid>
                             <Divider></Divider>
-                            <Grid container gap={2} style={{cursor: "pointer", marginTop: "10px"}}>
+                            <Grid container gap={2} style={{cursor: "pointer",  marginBottom: "10px"}}>
                                 Beds
-                            {bed_num.map((item)=>
+                           {bed_num.map((item)=>
                                 <>
                                     <Grid>
                                     <div onClick={(e)=> getType(item, "bed_num")} className={`border border-gray-400 p-1.5 shadow-md rounded-md hover:bg-gray-400 font-serif ${item.checked == true ? "bg-black text-white": ""}`}>{item.type}</div>
+                                        {/* <RoomIBedtem onClick={(e)=> console.log(e)} className="hover:outline-double font-serif bg-black">{item}</RoomIBedtem> */}
+                                    </Grid>
+                                </>
+                                )}
+                            </Grid>
+                            <Divider></Divider>
+                            <Grid container gap={2} style={{cursor: "pointer",  marginBottom: "10px"}}>
+                                Bathrooms
+                           {bath_room_num.map((item)=>
+                                <>
+                                    <Grid>
+                                    <div onClick={(e)=> getType(item, "bath_room_num")} className={`border border-gray-400 p-1.5 shadow-md rounded-md hover:bg-gray-400 font-serif ${item.checked == true ? "bg-black text-white": ""}`}>{item.type}</div>
                                         {/* <RoomIBedtem onClick={(e)=> console.log(e)} className="hover:outline-double font-serif bg-black">{item}</RoomIBedtem> */}
                                     </Grid>
                                 </>
@@ -397,21 +444,21 @@ export const HomePage = () => {
                     </Dialog>
 
                     <div className="hover:shadow-md hover:rounded-full hover:bg-gray-200 h-16 p-5 font-serif font-bold cursor-pointer"
-                    onClick={handleClickAmentiesOpen}>
+                    onClick={handleClickAmenitiesOpen}>
                     AMENITIES
                     </div>
-                    <Dialog open={amenties_open}>
+                    <Dialog open={amenities_open}>
                         <DialogTitle sx={{fontWeight: "bold"}}>
                         AMENITIES
                         </DialogTitle>
                         <DialogContent>
-                            <div style={{fontWeight: "bold"}} >Essentails</div>
+                            <div style={{fontWeight: "bold"}} >Essentials</div>
                             <Grid container columnGap={2}>
                                 {essential_amenities.map(item=>
                                     <>
                                         <FormGroup>
                                             <FormControlLabel
-                                                control={<Checkbox checked={item.checked} color="default" onChange={()=>onChange(item, "essentail")}/>}
+                                                control={<Checkbox checked={item.checked} color="default" onChange={()=>onChange(item, "essential")}/>}
                                                 label={item.type}
                                             />
                                         </FormGroup> 
@@ -453,7 +500,7 @@ export const HomePage = () => {
                                     <>
                                         <FormGroup>
                                             <FormControlLabel
-                                                control={<Checkbox checked={item.checked} color="default" onChange={()=>onChange(item, "saftey")}/>}
+                                                control={<Checkbox checked={item.checked} color="default" onChange={()=>onChange(item, "safety")}/>}
                                                 label={item.type}
                                             />
                                         </FormGroup> 
@@ -463,8 +510,8 @@ export const HomePage = () => {
 
                         </DialogContent>
                         <DialogActions sx={{display: "flex", justifyContent: "space-between"}}>
-                            <Button color="inherit" onClick={()=>handleAmentiesClose("cancel")} variant="contained">Cancel</Button>
-                            <Button style={{color: "black"}} color="error" onClick={()=>handleAmentiesClose("submit")} variant="contained">Submit</Button>
+                            <Button style={{color: "black"}} color="error" onClick={()=>handleAmenitiesClose("submit")} variant="contained">Submit</Button>
+                            <Button color="inherit" onClick={()=>handleAmenitiesClose("cancel")} variant="contained">Cancel</Button>
                         </DialogActions>
                     </Dialog>
                     <div className="hover:shadow-md hover:rounded-full hover:bg-gray-200 h-16 p-5 font-serif font-bold cursor-pointer"
@@ -511,15 +558,89 @@ export const HomePage = () => {
                     </Dialog>
 
                     <div className="hover:shadow-md hover:rounded-full hover:bg-red-400 h-16 p-5 font-serif font-bold cursor-pointer"
-                    onClick={()=> onsubmit()} >
+                    onClick={()=> onSubmit()} >
                         SHOW RECORDS
                     </div>
                 </div>
+
             </div>
+            <Divider sx={{marginY: "50px"}}></Divider>
+            { selectedRecords.length > 0 && 
+            <TabContext value={tabValue}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <TabList onChange={onChangeTab} aria-label="lab API tabs example">
+                        <Tab label="Show" value="1" />
+                        <Tab label="Charts" value="2" />
+                    </TabList>
+                </Box>
+                <TabPanel value="1">
+                    <Box sx={{width: "100%", margin:5}}>
+                        <Grid container gridColumn={4} spacing={2} rowGap={2} columnGap={2}>
+                            {selectedRecords.map((item) =>
+                                <> 
+                                    <Card sx={{ width: 230 }}>
+                                        <CardMedia 
+                                            component="img"
+                                            // height="140"
+                                            image={item.thumbnail_url}
+                                            alt={item.name_country}
+                                            sx={{imageOrientation: "inherit", imageResolution: "unset"}}
+                                        />
+                                        <CardContent>
+                                            <Typography gutterBottom>
+                                                {item.name_country}
+                                            </Typography>
+                                            <Typography gutterBottom sx={{fontWeight: "bold"}}>
+                                                Price: ₹{item.price} night
+                                            </Typography>
+                                            <Typography gutterBottom variant="body2" color="text.secondary">
+                                                WithOut Price Minimum {item.minimum_nights} nights - Maximum {item.maximum_nights} nights
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                With Price Minimum nights ₹{item.minimum_night_price} - Maximum nights ₹{item.maximum_night_price}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardActions>
+                                            <Button size="small">Details</Button>
+                                        </CardActions>
+                                    </Card>
+                                </>
+                            )}
+                        </Grid>
+                    </Box>
+                </TabPanel>
+                <TabPanel value="2">Item Two</TabPanel>
+            </TabContext>
+            }
+            {/* {loading == true ? <div className="flex justify-center"><CircularProgress/></div> : <></>} */}
+            {/* <div className="flex flex-wrap justify-center">
+                {selectedRecords.map((item)=>
+                    <>
+                        <div className="m-5">
+                            <Card sx={{ width: 300 }}>
+                                <CardMedia
+                                    component="img"
+                                    height="140"
+                                    image={item.image}
+                                    alt="green iguana"
+                                />
+                                <CardContent>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {item.name}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {item.description}
+                                    </Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Button size="small">Share</Button>
+                                    <Button size="small">Learn More</Button>
+                                </CardActions>
+                            </Card>
+                        </div>
+                    </>
+                )}
+            </div> */}
         </>
     );
 }
-
-// sx={{width: "600px", height: "300px", alignContent:"center", marginLeft: "5px"}}
-
-

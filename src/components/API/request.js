@@ -10,7 +10,7 @@ export const RequestService = (path, method, data) => {
         header_data["Authorization"] = `Bearer ${localStorage.getItem("token")}`
     }
     var body = JSON.stringify(data) 
-    var path = `${process.env.REACT_APP_API_URL}${path}`
+    var path = `http://127.0.0.1:8001${path}`
     return fetch(path, {
         method: method,
         headers: header_data,
