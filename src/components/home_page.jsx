@@ -9,7 +9,7 @@ import { get_filter_records } from "../components/API/request_index"
 import {useNavigate} from "react-router-dom";
 import {Card, CardMedia, CardContent, Typography, CardActions, Tab, Tabs} from "@mui/material";
 import { TabContext, TabList, TabPanel} from '@mui/lab';
-
+import {ChartGrid} from "./ChartGrid";
 
 export const HomePage = () => {
 
@@ -25,7 +25,8 @@ export const HomePage = () => {
       }
     const navigate = useNavigate();
     const [tabValue, setTabValue] = useState("1");
-    const {setSelectedRecords, selectedRecords} = useContext(reactMainContext);
+    const {setSelectedRecords, selectedRecords, setPropertyWiseRecords, 
+           setRoomWiseRecords, setCountryWiseRecords} = useContext(reactMainContext);
     const [property_open, setPropertyOpen] = useState(false);
     const [room_open, setRoomOpen] = useState(false);
     const [rom_bed_open, setRomBedOpen] = useState(false);
@@ -66,7 +67,7 @@ export const HomePage = () => {
 
     const [safety_amenities, setSafetyAmenities] = useState([{type: "Smoke alarm", checked: false}, {type: "Carbon monoxide alarm", checked: false}]);
 
-    const [price_range, setPriceRange] = useState([100, 10000]);
+    const [price_range, setPriceRange] = useState([10, 5000]);
     const handleClickPropertyOpen = () => {
         setPropertyOpen(true)
     }
@@ -294,7 +295,8 @@ export const HomePage = () => {
                 room_num: choosed_room_num[0], bed_num: choosed_bed_num[0], bath_room_num: choosed_bath_room_num[0],
                 essential_amenities: choosed_essential_amenties,
                 features_amenities: choosed_features_amenties, location_amenities: choosed_location_amenties, 
-                safety_amenities: choosed_safety_amenties, price_range: price_range
+                safety_amenities: choosed_safety_amenties, price_range: price_range,
+                // limit:[]
             }
             // var data = {
             //     "property": [
@@ -326,7 +328,10 @@ export const HomePage = () => {
             //     "price_range": []
             //   }
               get_filter_records(data).then(response =>{
-                setSelectedRecords(response.detail);
+                setSelectedRecords(response.detail.df);
+                setCountryWiseRecords(response.detail.country_wise_avg_price);
+                setPropertyWiseRecords(response.detail.property_type_group_aggregation);
+                setRoomWiseRecords(response.detail.room_type_group_aggregation);
                 // navigate("/show")
                 console.log(response)
             })
@@ -336,6 +341,7 @@ export const HomePage = () => {
     const onChangeTab = (event, newValue) => {
         setTabValue(newValue);
     }
+
     return (
         <>
             <div className="border-teal-100 shadow-md h-16 rounded-full mx-48">
@@ -531,8 +537,8 @@ export const HomePage = () => {
                                 value={price_range}
                                 onChange={(e, newValue)=> onChangePrice(newValue)}
                                 valueLabelDisplay="auto"
-                                min={100}
-                                max={10000}
+                                min={10}
+                                max={5000}
                                 color="black"
                                 // getAriaValueText={`$₹{price_range}`}
                             />
@@ -565,7 +571,7 @@ export const HomePage = () => {
 
             </div>
             <Divider sx={{marginY: "50px"}}></Divider>
-            { selectedRecords.length > 0 && 
+            {selectedRecords.length > 0 && 
             <TabContext value={tabValue}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={onChangeTab} aria-label="lab API tabs example">
@@ -576,7 +582,8 @@ export const HomePage = () => {
                 <TabPanel value="1">
                     <Box sx={{width: "100%", margin:5}}>
                         <Grid container gridColumn={4} spacing={2} rowGap={2} columnGap={2}>
-                            {selectedRecords.map((item) =>
+                            {selectedRecords.map((item) => {
+                                const min = item.price * item.minimum_night_price;
                                 <> 
                                     <Card sx={{ width: 230 }}>
                                         <CardMedia 
@@ -597,7 +604,7 @@ export const HomePage = () => {
                                                 WithOut Price Minimum {item.minimum_nights} nights - Maximum {item.maximum_nights} nights
                                             </Typography>
                                             <Typography variant="body2" color="text.secondary">
-                                                With Price Minimum nights ₹{item.minimum_night_price} - Maximum nights ₹{item.maximum_night_price}
+                                                With Price Minimum nights ₹{min} - Maximum nights ₹{item.price * Number(item.maximum_night_price)}
                                             </Typography>
                                         </CardContent>
                                         <CardActions>
@@ -605,11 +612,14 @@ export const HomePage = () => {
                                         </CardActions>
                                     </Card>
                                 </>
+                            }
                             )}
                         </Grid>
                     </Box>
                 </TabPanel>
-                <TabPanel value="2">Item Two</TabPanel>
+                <TabPanel value="2">
+                    <ChartGrid />
+                </TabPanel>
             </TabContext>
             }
             {/* {loading == true ? <div className="flex justify-center"><CircularProgress/></div> : <></>} */}
