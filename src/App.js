@@ -13,13 +13,17 @@ function App() {
   const [propertyWiseRecords, setPropertyWiseRecords] = useState([]); 
   const [roomWiseRecords, setRoomWiseRecords] = useState([]); 
   const [countryWiseRecords, setCountryWiseRecords] = useState([]); 
+  const [reviewsWiseRecords, setReviewsWiseRecords] = useState([]); 
+  const [dataDetails, setDataDetails] = useState([]);
+  
   return (
     <>
     <BrowserRouter>
       <div>
         <Header></Header>
         <reactMainContext.Provider value={{setSelectedRecords, selectedRecords, propertyWiseRecords, setPropertyWiseRecords, 
-                                roomWiseRecords, setRoomWiseRecords, countryWiseRecords, setCountryWiseRecords}}>
+                                roomWiseRecords, setRoomWiseRecords, countryWiseRecords, setCountryWiseRecords, setReviewsWiseRecords, 
+                                reviewsWiseRecords, setDataDetails, dataDetails}}>
           <Routes>
               <Route path="/" element={<HomePage/>} ></Route>
               <Route path="show" element={<BodyGrid/>} ></Route>

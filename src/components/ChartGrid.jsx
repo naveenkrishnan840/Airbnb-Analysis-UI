@@ -47,7 +47,7 @@ export const ChartGrid = () => {
         }
       ];
 
-    const { propertyWiseRecords, roomWiseRecords, countryWiseRecords} = useContext(reactMainContext);
+    const { propertyWiseRecords, roomWiseRecords, countryWiseRecords, reviewsWiseRecords} = useContext(reactMainContext);
     const chartSetting = {
       width: 1000,
       height: 500,
@@ -77,8 +77,8 @@ export const ChartGrid = () => {
                   dataset={propertyWiseRecords}
                   xAxis={[{ dataKey: '_id', scaleType: "band"}]}
                   series={[
-                    { dataKey: 'minimum_night', label: 'Minimum Night', propertyValueFormatter },
-                    { dataKey: 'maximum_night', label: 'Maximum Night', propertyValueFormatter }
+                    { dataKey: 'minimum_price', label: 'Minimum Price', propertyValueFormatter },
+                    { dataKey: 'maximum_price', label: 'Maximum Price', propertyValueFormatter }
                   ]}
                   layout="vertical"
                   grid={{vertical: true}}
@@ -93,8 +93,23 @@ export const ChartGrid = () => {
                   dataset={roomWiseRecords}
                   xAxis={[{ dataKey: '_id', scaleType: "band"}]}
                   series={[
-                    { dataKey: 'minimum_night', label: 'Minimum Night', roomValueFormatter },
-                    { dataKey: 'maximum_night', label: 'Maximum Night', roomValueFormatter }
+                    { dataKey: 'minimum_price', label: 'Minimum Price', roomValueFormatter },
+                    { dataKey: 'maximum_price', label: 'Maximum Price', roomValueFormatter }
+                  ]}
+                  layout="vertical"
+                  grid={{vertical: true}}
+                  {...chartSetting}
+                />
+            </div>
+          </div>
+          <div className='box-border bg-slate-300 shadow-md'>
+            <h3 className='font-bold pl-15 pt-10'>Property Type Wise No of Reviews</h3>
+            <div  className="m-10">
+                <BarChart
+                  dataset={reviewsWiseRecords}
+                  xAxis={[{ dataKey: '_id', scaleType: "band"}]}
+                  series={[
+                    { dataKey: 'no_of_reviews', label: 'Number of reviews' }
                   ]}
                   layout="vertical"
                   grid={{vertical: true}}
