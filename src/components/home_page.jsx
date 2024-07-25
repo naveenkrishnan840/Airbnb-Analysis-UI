@@ -372,7 +372,7 @@ export const HomePage = () => {
 
     const showDetails = (docId) => {
         getDetails({doc_id: docId}).then(response => {
-            setDataDetails(response.detail);
+            setDataDetails(response.detail[0]);
             navigate("/show")
             console.log(response)
         })

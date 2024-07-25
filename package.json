@@ -16,7 +16,8 @@
     "tailwindcss": "3.4.4",
     "react-router-dom": "6.25.1",
     "@mui/lab": "5.0.0-alpha.172",
-    "@mui/x-charts": "7.11.0"
+    "@mui/x-charts": "7.11.0",
+    "react-simple-maps": "3.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

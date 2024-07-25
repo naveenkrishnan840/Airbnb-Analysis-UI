@@ -14,7 +14,7 @@ function App() {
   const [roomWiseRecords, setRoomWiseRecords] = useState([]); 
   const [countryWiseRecords, setCountryWiseRecords] = useState([]); 
   const [reviewsWiseRecords, setReviewsWiseRecords] = useState([]); 
-  const [dataDetails, setDataDetails] = useState([]);
+  const [dataDetails, setDataDetails] = useState({});
   
   return (
     <>

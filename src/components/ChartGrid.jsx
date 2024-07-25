@@ -1,51 +1,9 @@
 import React, {useContext} from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
-import {axisClasses} from "@mui/x-charts/ChartsAxis"
 import { reactMainContext } from '../App';
-import { alignProperty } from '@mui/material/styles/cssUtils';
-
 
 
 export const ChartGrid = () => {
-
-    const countryWise = [
-        {
-          "_id": "Brazil",
-          "avgPrice": 343
-        },
-        {
-          "_id": "Portugal",
-          "avgPrice": 67
-        },
-        {
-          "_id": "Spain",
-          "avgPrice": 89
-        },
-        {
-          "_id": "Australia",
-          "avgPrice": 166
-        },
-        {
-          "_id": "United States",
-          "avgPrice": 137
-        },
-        {
-          "_id": "Canada",
-          "avgPrice": 85
-        },
-        {
-          "_id": "Hong Kong",
-          "avgPrice": 604
-        },
-        {
-          "_id": "Turkey",
-          "avgPrice": 234
-        },
-        {
-          "_id": "China",
-          "avgPrice": 448
-        }
-      ];
 
     const { propertyWiseRecords, roomWiseRecords, countryWiseRecords, reviewsWiseRecords} = useContext(reactMainContext);
     const chartSetting = {
