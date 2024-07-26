@@ -15,6 +15,10 @@ function App() {
   const [countryWiseRecords, setCountryWiseRecords] = useState([]); 
   const [reviewsWiseRecords, setReviewsWiseRecords] = useState([]); 
   const [dataDetails, setDataDetails] = useState({});
+  const [filterRecords, setFilterRecords] = useState({});
+  const [docsCount, setDocsCount] = useState(0);
+  const [showCount, setShowCount] = useState(0);
+  const [searchRecords, setSearchRecords] = useState([]);
   
   return (
     <>
@@ -23,7 +27,8 @@ function App() {
         <Header></Header>
         <reactMainContext.Provider value={{setSelectedRecords, selectedRecords, propertyWiseRecords, setPropertyWiseRecords, 
                                 roomWiseRecords, setRoomWiseRecords, countryWiseRecords, setCountryWiseRecords, setReviewsWiseRecords, 
-                                reviewsWiseRecords, setDataDetails, dataDetails}}>
+                                reviewsWiseRecords, setDataDetails, dataDetails, filterRecords, setFilterRecords, docsCount, setDocsCount,
+                                showCount, setShowCount, searchRecords, setSearchRecords}}>
           <Routes>
               <Route path="/" element={<HomePage/>} ></Route>
               <Route path="show" element={<BodyGrid/>} ></Route>

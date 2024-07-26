@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, {useState, useContext, useEffect} from "react";
 import "../index";
 import {Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Input, Slider} from "@mui/material";
 import { styled } from '@mui/material/styles';
@@ -13,23 +13,11 @@ import {ChartGrid} from "./ChartGrid";
 
 export const HomePage = () => {
 
-    var response = {
-        "_id": "10133350",
-        "minimum_nights": "2",
-        "maximum_nights": "7",
-        "price": 275,
-        "minimum_night_price": 550,
-        "maximum_night_price": 1925,
-        "name_country": "2 bedroom Upper east side, United States",
-        "thumbnail_url": "https://a0.muscache.com/im/pictures/d9886a79-0633-4ab4-b03a-7686bab13d71.jpg?aki_policy=large"
-      }
     const navigate = useNavigate();
-    const [docsCount, setDocsCount] = useState(0);
-    const [showCount, setShowCount] = useState(0);
     const [tabValue, setTabValue] = useState("1");
-    const [searchRecords, setSearchRecords] = useState([]);
     const {setSelectedRecords, selectedRecords, setPropertyWiseRecords, 
-           setRoomWiseRecords, setCountryWiseRecords, setReviewsWiseRecords, setDataDetails} = useContext(reactMainContext);
+           setRoomWiseRecords, setCountryWiseRecords, setReviewsWiseRecords, setDataDetails, filterRecords, setFilterRecords, 
+           docsCount, setDocsCount, showCount, setShowCount, searchRecords, setSearchRecords} = useContext(reactMainContext);
     const [property_open, setPropertyOpen] = useState(false);
     const [room_open, setRoomOpen] = useState(false);
     const [rom_bed_open, setRomBedOpen] = useState(false);
@@ -163,39 +151,6 @@ export const HomePage = () => {
     const handleClicksetPriceRangeOpen = () => {
         setPriceRangeOpen(true);
     };
-    // const PropertyItem = styled(Paper)(({ theme }) => ({
-    //     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    //     ...theme.typography.body2,
-    //     padding: theme.spacing(1),
-    //     textAlign: 'center',
-    //     color: theme.palette.text.secondary,
-    //     borderRadius: "10px",
-    //     // background: "black",
-    //     // color: "white"
-    //     // height: "100px",
-    //     // alignItems: "center"
-    //   }));
-    
-    // const RoomItem = styled(Paper)(({ theme }) => ({
-    // backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    // ...theme.typography.body2,
-    // padding: theme.spacing(1),
-    // textAlign: 'center',
-    // color: theme.palette.text.secondary,
-    // borderRadius: "10px",
-    // height: "100px",
-    // alignItems: "center"
-    // }));
-
-    // const RoomIBedtem = styled(Paper)(({ theme }) => ({
-    //     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    //     ...theme.typography.body2,
-    //     padding: theme.spacing(1),
-    //     textAlign: 'center',
-    //     color: theme.palette.text.secondary,
-    //     borderRadius: "10px",
-
-    //     }));
 
     const getType = (current_item, dialog) => {
         if (dialog === "property"){
@@ -299,73 +254,29 @@ export const HomePage = () => {
                 essential_amenities: choosed_essential_amenties,
                 features_amenities: choosed_features_amenties, location_amenities: choosed_location_amenties, 
                 safety_amenities: choosed_safety_amenties, price_range: price_range, limit: 100
-                // limit:[]
             }
-            // var data = {
-            //     "property": [
-            //       "Aparthotel",
-            //       "Apartment",
-            //       "Barn"
-            //     ],
-            //     "rooms": [
-            //       "Entire home/apt",
-            //       "Private room"
-            //     ],
-            //     "room_num": [
-            //       "1"
-            //     ],
-            //     "bed_num": [
-            //       "2"
-            //     ],
-            //     "bath_room_num": [
-            //       "2"
-            //     ],
-            //     "essential_amenities": [
-            //       "Heating",
-            //       "Heating",
-            //       "Hair dryer"
-            //     ],
-            //     "features_amenities": [],
-            //     "location_amenities": [],
-            //     "safety_amenities": [],
-            //     "price_range": []
-            //   }
+            setFilterRecords(data)
               get_filter_records(data).then(response =>{
-                setDocsCount(response.detail.docs_count);
-                setShowCount(response.detail.df.length);
-                setSelectedRecords(response.detail.df);
-                setSearchRecords(response.detail.df);
-                setCountryWiseRecords(response.detail.country_wise_avg_price);
-                setPropertyWiseRecords(response.detail.property_type_group_aggregation);
-                setRoomWiseRecords(response.detail.room_type_group_aggregation);
-                setReviewsWiseRecords(response.detail.property_type_wise_no_of_reviews);
+                setDocsCount(response?.detail.docs_count);
+                setShowCount(response?.detail.df.length);
+                setSelectedRecords(response?.detail.df);
+                setSearchRecords(response?.detail.df);
+                setCountryWiseRecords(response?.detail.country_wise_avg_price);
+                setPropertyWiseRecords(response?.detail.property_type_group_aggregation);
+                setRoomWiseRecords(response?.detail.room_type_group_aggregation);
+                setReviewsWiseRecords(response?.detail.property_type_wise_no_of_reviews);
                 console.log(response)
             })
         }
     }
 
     const handleShowMore = () => {
-        var choosed_property = property_name.filter(item=>item.checked == true).map(item=>item.type);
-        var choosed_rooms = rooms_name.filter(item=>item.checked == true).map(item=>item.type)
-        var choosed_room_num = room_num.filter(item=>item.checked == true).map(item=>item.type) 
-        var choosed_bed_num = bed_num.filter(item=>item.checked == true).map(item=>item.type) 
-        var choosed_bath_room_num = bath_room_num.filter(item=>item.checked == true).map(item=>item.type) 
-        var choosed_essential_amenties = essential_amenities.filter(item=>item.checked == true).map(item=>item.type)
-        var choosed_features_amenties = features_amenities.filter(item=>item.checked == true).map(item=>item.type) 
-        var choosed_location_amenties = location_amenities.filter(item=>item.checked == true).map(item=>item.type) 
-        var choosed_safety_amenties = safety_amenities.filter(item=>item.checked == true).map(item=>item.type)
-        var data = {
-            property: choosed_property, rooms: choosed_rooms, 
-            room_num: choosed_room_num[0], bed_num: choosed_bed_num[0], bath_room_num: choosed_bath_room_num[0],
-            essential_amenities: choosed_essential_amenties,
-            features_amenities: choosed_features_amenties, location_amenities: choosed_location_amenties, 
-            safety_amenities: choosed_safety_amenties, price_range: price_range, limit: searchRecords.length + 100
-        }
-        
-        getShowMore(data).then(response =>{
+        let filtered = {...filterRecords, limit: searchRecords.length + 100}
+        setFilterRecords(filtered)
+        getShowMore(filtered).then(response =>{
             setSelectedRecords([...selectedRecords, ...response.detail]);
             setSearchRecords([...searchRecords, ...response.detail]);
-            setShowCount(response.detail.length)
+            setShowCount(response?.detail.length)
             console.log(response)
         })
     }
@@ -456,6 +367,8 @@ export const HomePage = () => {
                             ROOMS & BEDS
                         </DialogTitle>
                         <DialogContent>
+                            
+                            
                             <Grid container gap={2} style={{cursor: "pointer", marginTop: "10px"}}>
                                 Bedrooms
                             {room_num.map((item)=>
@@ -468,7 +381,7 @@ export const HomePage = () => {
                                 )}
                             </Grid>
                             <Divider></Divider>
-                            <Grid container gap={2} style={{cursor: "pointer",  marginBottom: "10px"}}>
+                            <Grid container gap={2} style={{cursor: "pointer",  marginBottom: "10px", marginTop: "10px"}}>
                                 Beds
                            {bed_num.map((item)=>
                                 <>
@@ -659,7 +572,7 @@ export const HomePage = () => {
                                                 With Price <br/> Minimum nights ₹{item.price * Number(item.minimum_nights)} <br/> Maximum nights ₹{item.price * Number(item.maximum_nights)}
                                             </Typography>
                                         </CardContent>
-                                        <CardActions>
+                                        <CardActions sx={{margin: "10px"}}>
                                             <Button onClick={()=> showDetails(item._id)} color="error" variant="outlined" size="small">Details</Button>
                                         </CardActions>
                                     </Card>
@@ -678,35 +591,6 @@ export const HomePage = () => {
                 </TabPanel>
             </TabContext>
             }
-            {/* {loading == true ? <div className="flex justify-center"><CircularProgress/></div> : <></>} */}
-            {/* <div className="flex flex-wrap justify-center">
-                {selectedRecords.map((item)=>
-                    <>
-                        <div className="m-5">
-                            <Card sx={{ width: 300 }}>
-                                <CardMedia
-                                    component="img"
-                                    height="140"
-                                    image={item.image}
-                                    alt="green iguana"
-                                />
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        {item.name}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {item.description}
-                                    </Typography>
-                                </CardContent>
-                                <CardActions>
-                                    <Button size="small">Share</Button>
-                                    <Button size="small">Learn More</Button>
-                                </CardActions>
-                            </Card>
-                        </div>
-                    </>
-                )}
-            </div> */}
         </>
     );
 }
