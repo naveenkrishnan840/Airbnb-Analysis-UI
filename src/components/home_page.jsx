@@ -1,6 +1,6 @@
-import React, {useState, useContext, useEffect} from "react";
+import React, {useState, useContext, useEffect, useRef} from "react";
 import "../index";
-import {Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Input, Slider} from "@mui/material";
+import {Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Input, Slider, Stack, Skeleton} from "@mui/material";
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import {FormGroup, FormControlLabel, Checkbox, Alert} from "@mui/material"
@@ -14,7 +14,9 @@ import {ChartGrid} from "./ChartGrid";
 export const HomePage = () => {
 
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
     const [tabValue, setTabValue] = useState("1");
+    const limit = useRef(100);
     const {setSelectedRecords, selectedRecords, setPropertyWiseRecords, 
            setRoomWiseRecords, setCountryWiseRecords, setReviewsWiseRecords, setDataDetails, filterRecords, setFilterRecords, 
            docsCount, setDocsCount, showCount, setShowCount, searchRecords, setSearchRecords} = useContext(reactMainContext);
@@ -48,7 +50,7 @@ export const HomePage = () => {
 
     const [essential_amenities, setEssentialAmenities] = useState([{type: "Wifi", checked: false}, {type: "Kitchen", checked: false}, {type: "Washing machine", checked: false}, {type: "Dryer", checked: false},
                                                                  {type: "Air conditioning", checked: false}, {type: "Heating", checked: false}, {type: "Dedicated workspace", checked: false}, 
-                                                                 {type: "TV", checked: false}, {type: "Heating", checked: false}, {type: "Hair dryer", checked: false}, {type: "Iron", checked: false}]);
+                                                                 {type: "TV", checked: false}, {type: "Hair dryer", checked: false}, {type: "Iron", checked: false}]);
 
     const [features_amenities, setFeaturesAmenities] = useState([{type: "Pool", checked: false}, {type: "Hot tub", checked: false}, {type: "Free parking", checked: false}, {type: "EV charger", checked: false},
                                                                     {type: "Cot", checked: false}, {type: "King bed", checked: false}, {type: "Gym", checked: false}, 
@@ -248,14 +250,16 @@ export const HomePage = () => {
             var choosed_features_amenties = features_amenities.filter(item=>item.checked == true).map(item=>item.type) 
             var choosed_location_amenties = location_amenities.filter(item=>item.checked == true).map(item=>item.type) 
             var choosed_safety_amenties = safety_amenities.filter(item=>item.checked == true).map(item=>item.type)
+            limit.current = 100
             var data = {
                 property: choosed_property, rooms: choosed_rooms, 
                 room_num: choosed_room_num[0], bed_num: choosed_bed_num[0], bath_room_num: choosed_bath_room_num[0],
                 essential_amenities: choosed_essential_amenties,
                 features_amenities: choosed_features_amenties, location_amenities: choosed_location_amenties, 
-                safety_amenities: choosed_safety_amenties, price_range: price_range, limit: 100
+                safety_amenities: choosed_safety_amenties, price_range: price_range, limit: limit.current
             }
             setFilterRecords(data)
+            setIsLoading(true)
               get_filter_records(data).then(response =>{
                 setDocsCount(response?.detail.docs_count);
                 setShowCount(response?.detail.df.length);
@@ -266,18 +270,22 @@ export const HomePage = () => {
                 setRoomWiseRecords(response?.detail.room_type_group_aggregation);
                 setReviewsWiseRecords(response?.detail.property_type_wise_no_of_reviews);
                 console.log(response)
+                setIsLoading(false)
             })
         }
     }
 
     const handleShowMore = () => {
+        limit.current = searchRecords.length + 100
         let filtered = {...filterRecords, limit: searchRecords.length + 100}
         setFilterRecords(filtered)
+        setIsLoading(true)
         getShowMore(filtered).then(response =>{
             setSelectedRecords([...selectedRecords, ...response.detail]);
             setSearchRecords([...searchRecords, ...response.detail]);
             setShowCount(response?.detail.length)
             console.log(response)
+            setIsLoading(false)
         })
     }
 
@@ -304,9 +312,9 @@ export const HomePage = () => {
     }
     return (
         <>
-            <div className="border-teal-100 shadow-md h-16 rounded-full mx-48">
-                <div className="grid grid-cols-6 divide-x divide-gray-500 divide-solid">
-                    <div className="hover:shadow-md hover:rounded-full hover:bg-gray-200 h-16 p-5 font-serif font-bold cursor-pointer"
+            <div className="border-teal-100 h-16 rounded-full mx-48">
+                <div className="grid grid-cols-6 divide-gray-500 divide-solid gap-2">
+                    <div className="hover:text-white text-center shadow-md rounded-full bg-gray-200 hover:bg-gray-600 h-16 p-5 font-serif font-bold cursor-pointer"
                     onClick={()=>handleClickPropertyOpen()}>
                         PROPERTY TYPE
                     </div>
@@ -328,16 +336,16 @@ export const HomePage = () => {
                         </DialogContent>
                         <DialogActions sx={{display: "flex", justifyContent: "space-between"}}>
                             <Button color="inherit" onClick={()=>handlePropertyClose("cancel")} variant="contained">Cancel</Button>
-                            <Button style={{color: "black"}} onClick={()=>handlePropertyClose("submit")} variant="contained">Submit</Button>
+                            <Button style={{color: "black"}} color="error" onClick={()=>handlePropertyClose("submit")} variant="contained">Submit</Button>
                         </DialogActions>
                     </Dialog>
 
-                    <div className="hover:shadow-md hover:rounded-full hover:bg-gray-200 h-16 p-5 font-serif font-bold cursor-pointer"
+                    <div className="hover:text-white text-center shadow-md rounded-full bg-gray-200 hover:bg-gray-600 h-16 p-5 font-serif font-bold cursor-pointer"
                     onClick={handleClickRoomOpen}>
                         ROOM TYPE
                     </div>
                     <Dialog open={room_open}>
-                        <DialogTitle sx={{fontWeight: "bold"}}>
+                        <DialogTitle sx={{fontWeight: "bold", WebkitAlignContent: "center"}}>
                         ROOM TYPE
                         </DialogTitle>
                         <DialogContent sx={{height: "200px", marginX: "40px"}}>
@@ -354,11 +362,11 @@ export const HomePage = () => {
                         </DialogContent>
                         <DialogActions sx={{display: "flex", justifyContent: "space-between"}}>
                             <Button color="inherit" onClick={()=>handleRoomClose("cancel")} variant="contained">Cancel</Button>
-                            <Button style={{color: "black"}} onClick={()=>handleRoomClose("submit")} variant="contained">Submit</Button>
+                            <Button style={{color: "black"}} color="error" onClick={()=>handleRoomClose("submit")} variant="contained">Submit</Button>
                         </DialogActions>
                     </Dialog>
 
-                    <div className="hover:shadow-md hover:rounded-full hover:bg-gray-200 h-16 p-5 font-serif font-bold cursor-pointer"
+                    <div className="hover:text-white text-center shadow-md rounded-full bg-gray-200 hover:bg-gray-600 h-16 p-5 font-serif font-bold cursor-pointer"
                     onClick={handleClickRoomBedOpen}>
                         ROOMS & BEDS
                     </div>
@@ -407,11 +415,11 @@ export const HomePage = () => {
                         </DialogContent>
                         <DialogActions sx={{display: "flex", justifyContent: "space-between"}}>
                             <Button color="inherit" onClick={()=>handleRoomBedClose("cancel")} variant="contained">Cancel</Button>
-                            <Button style={{color: "black"}} onClick={()=>handleRoomBedClose("submit")} variant="contained">Submit</Button>
+                            <Button style={{color: "black"}} color="error" onClick={()=>handleRoomBedClose("submit")} variant="contained">Submit</Button>
                         </DialogActions>
                     </Dialog>
 
-                    <div className="hover:shadow-md hover:rounded-full hover:bg-gray-200 h-16 p-5 font-serif font-bold cursor-pointer"
+                    <div className="hover:text-white text-center shadow-md rounded-full bg-gray-200 hover:bg-gray-600 h-16 p-5 font-serif font-bold cursor-pointer"
                     onClick={handleClickAmenitiesOpen}>
                     AMENITIES
                     </div>
@@ -478,11 +486,11 @@ export const HomePage = () => {
 
                         </DialogContent>
                         <DialogActions sx={{display: "flex", justifyContent: "space-between"}}>
-                            <Button style={{color: "black"}} color="error" onClick={()=>handleAmenitiesClose("submit")} variant="contained">Submit</Button>
                             <Button color="inherit" onClick={()=>handleAmenitiesClose("cancel")} variant="contained">Cancel</Button>
+                            <Button style={{color: "black"}} color="error" onClick={()=>handleAmenitiesClose("submit")} variant="contained">Submit</Button>
                         </DialogActions>
                     </Dialog>
-                    <div className="hover:shadow-md hover:rounded-full hover:bg-gray-200 h-16 p-5 font-serif font-bold cursor-pointer"
+                    <div className="hover:text-white text-center shadow-md rounded-full bg-gray-200 hover:bg-gray-500 h-16 p-5 font-serif font-bold cursor-pointer"
                     onClick={handleClicksetPriceRangeOpen}>
                         PRICE RANGE
                     </div>
@@ -521,11 +529,11 @@ export const HomePage = () => {
                         </DialogContent>
                         <DialogActions sx={{display: "flex", justifyContent: "space-between"}}>
                             <Button color="inherit" onClick={()=>handlesetPriceRangeOpenClose("cancel")} variant="contained">Cancel</Button>
-                            <Button style={{color: "black"}} onClick={()=>handlesetPriceRangeOpenClose("submit")} variant="contained">Submit</Button>
+                            <Button style={{color: "black"}} color="error" onClick={()=>handlesetPriceRangeOpenClose("submit")} variant="contained">Submit</Button>
                         </DialogActions>
                     </Dialog>
 
-                    <div className="hover:shadow-md hover:rounded-full hover:bg-red-400 h-16 p-5 font-serif font-bold cursor-pointer"
+                    <div className="hover:text-white text-center shadow-md rounded-full bg-red-400 hover:bg-red-600 h-16 p-5 font-serif font-bold cursor-pointer"
                     onClick={()=> onSubmit()} >
                         SHOW RECORDS
                     </div>
@@ -548,7 +556,7 @@ export const HomePage = () => {
                     </div>
                     <Box sx={{width: "100%", margin:5}}>
                         <Grid container gridColumn={4} spacing={2} rowGap={2} columnGap={2}>
-                            {searchRecords.length > 0 ? searchRecords.map((item) => 
+                            {!isLoading ?  (searchRecords.length > 0 ? searchRecords.map((item) => 
                                 <> 
                                      <Card sx={{ width: 230, borderRadius: "30px" }}>
                                         <CardMedia 
@@ -579,10 +587,21 @@ export const HomePage = () => {
                                 </>
                             ): <div className="flex justify-center">
                                 No Records Found
-                                </div>}
+                                </div>) : 
+                                // <div className="flex justify-center">
+                                Array.from({ length: limit.current }, (_, i) => i + 1).map(()=>(<Stack direction={"column"} useFlexGap spacing={2}>
+                                    {/* For variant="text", adjust the height via font-size */}
+                                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                                    {/* For other variants, adjust the size with `width` and `height` */}
+                                    <Skeleton variant="circular" width={40} height={40} />
+                                    <Skeleton variant="rectangular" width={210} height={60} />
+                                    <Skeleton variant="rounded" width={210} height={60} />
+                              </Stack>)) 
+                                // </div>
+                                }
                         </Grid>
                         {docsCount > 100 && <div className="flex justify-center mt-5">
-                            <Button onClick={()=>handleShowMore()} variant="contained">Show More</Button>
+                            <Button onClick={()=>handleShowMore()} variant="contained" color="error">Show More</Button>
                         </div>}
                     </Box>
                 </TabPanel>

@@ -19,9 +19,11 @@ export const BodyGrid = () => {
         <>
             <div className="flex flex-col items-center shadow-sm shadow-gray-400 mx-56 h-auto mb-10">
               <div className="h-auto mx-8">
-                <div className="ml-16">
-                    <p className="p-2 text-xl font-bold">{dataDetails.name}</p>
-                    <img src={dataDetails.images.picture_url} className="rounded-md h-96" style={{width: "900px"}}/>
+                 <div className="text-center">
+                    <p className="p-2 text-5xl font-bold">{dataDetails.name}</p>
+                  </div>
+                  <div className="flex justify-center items-center">
+                    <img src={dataDetails.images.picture_url} className="rounded-md h-" style={{width: "900px"}}/>
                   </div>
                   <div className="grid grid-flow-col grid-cols-2 mx-8">
                     <div className="p-4">
@@ -37,7 +39,7 @@ export const BodyGrid = () => {
                     </div>
                     <div className="m-5 min-h-80 shadow-md">
                         <div className="p-3">
-                            <div className="p-2 shadow-md rounded-md my-3">Price: ₹ {dataDetails.price} night</div>
+                            <div className="p-2 shadow-md text-center rounded-md my-3">Price: ₹ {dataDetails.price} night</div>
                             <Button sx={{marginY: "10px", width: "100%"}} variant="contained" color="error"> Reserve </Button>
                             <div className="grid grid-flow-col grid-cols-2">
                                 <div>
@@ -48,15 +50,15 @@ export const BodyGrid = () => {
                                 </div>
                                 <div>
                                     <p>₹ {dataDetails.price * dataDetails.minimum_nights}</p> 
-                                    {dataDetails.security_deposit && <p>₹ {dataDetails.security_deposit}</p>} 
-                                    {dataDetails.cleaning_fee && <p>₹ {dataDetails.cleaning_fee}</p>} 
+                                    {dataDetails.security_deposit && <p>₹ {dataDetails.security_deposit}</p>}
+                                    {dataDetails.cleaning_fee && <p>₹ {dataDetails.cleaning_fee}</p>}
                                 </div>
                             </div>
                             <Divider sx={{marginTop: "10px"}}></Divider> 
                         </div>
                         <div className="grid grid-cols-2 p-3">
                             <p>Total before taxes</p>
-                            <p>₹ {dataDetails.price * dataDetails.minimum_nights + dataDetails.security_deposit + dataDetails.cleaning_fee}</p>
+                            <p>₹ {dataDetails.price * dataDetails.minimum_nights + (dataDetails.security_deposit? dataDetails.security_deposit: 0) + (dataDetails.cleaning_fee ? dataDetails.cleaning_fee: 0)}</p>
                         </div>
                         <Divider sx={{marginTop: "10px"}}></Divider>
                     </div>
