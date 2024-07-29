@@ -45,12 +45,12 @@ export const BodyGrid = () => {
                                 <div>
                                     <p>Min night: <span className="font-bold underline">₹{dataDetails.price} x {dataDetails.minimum_nights}</span></p>
                                     {/* <p>Max night: <span className="font-bold underline">₹{dataDetails.price}x {dataDetails.maximum_nights}</span> </p> */}
-                                    {dataDetails.security_deposit && <p>Security deposit: </p>}
+                                    {dataDetails.security_deposit > 0 && <p>Security deposit: </p>}
                                     {dataDetails.cleaning_fee && <p>Cleaning fees: </p>}
                                 </div>
                                 <div>
                                     <p>₹ {dataDetails.price * dataDetails.minimum_nights}</p> 
-                                    {dataDetails.security_deposit && <p>₹ {dataDetails.security_deposit}</p>}
+                                    {dataDetails.security_deposit > 0 ? dataDetails.security_deposit && <p>₹ {dataDetails.security_deposit}</p>: ''}
                                     {dataDetails.cleaning_fee && <p>₹ {dataDetails.cleaning_fee}</p>}
                                 </div>
                             </div>
