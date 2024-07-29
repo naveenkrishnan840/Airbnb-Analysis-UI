@@ -79,12 +79,12 @@ export const BodyGrid = () => {
                     <ol className="text-center">
                       {dataDetails.amenities.slice(Math.round(dataDetails.amenities.length / 2, dataDetails.amenities.length), ).map((item)=> 
                               <li className="p-1 shadow-md bg-gray-300 m-1 text-blue-800">{item}</li>
-                      )}
+                    )}
                     </ol>   
                   </div>  
                 </div>
                 <hr/>
-                {Object.keys(dataDetails.review_scores).length > 0 && <div className="ml-20 grid grid-flow-col grid-cols-6 my-10 gap-36 w-56 h-28">
+                {Object.keys(dataDetails.review_scores).length > 0 && <div className="mx-8 grid grid-flow-col grid-cols-6 my-10 gap-36 h-28">
                   <div className="bg-gradient-to-r from-cyan-500 to-blue-500 shadow-md w-32 h-28 text-center pt-7 rounded-full text-white">
                     <div className="col-span-1">Cleanliness</div>
                     <div className="col-span-1">{dataDetails.review_scores.review_scores_cleanliness/2}.0...</div>

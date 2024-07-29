@@ -294,6 +294,8 @@ export const HomePage = () => {
             setDataDetails(response.detail[0]);
             navigate("/show")
             console.log(response)
+            setSearchRecords(selectedRecords)
+            setShowCount(selectedRecords.length)
         })
     }
     const onChangeTab = (event, newValue) => {
