@@ -60,7 +60,7 @@ export const HomePage = () => {
 
     const [safety_amenities, setSafetyAmenities] = useState([{type: "Smoke alarm", checked: false}, {type: "Carbon monoxide alarm", checked: false}]);
 
-    const [price_range, setPriceRange] = useState([10, 5000]);
+    const [price_range, setPriceRange] = useState([10, 3000]);
     const handleClickPropertyOpen = () => {
         setPropertyOpen(true)
     }
@@ -510,7 +510,7 @@ export const HomePage = () => {
                                 onChange={(e, newValue)=> onChangePrice(newValue)}
                                 valueLabelDisplay="auto"
                                 min={10}
-                                max={5000}
+                                max={3000}
                                 color="black"
                                 // getAriaValueText={`$₹{price_range}`}
                             />
